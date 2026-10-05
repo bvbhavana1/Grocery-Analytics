@@ -7,7 +7,7 @@ A Python project with two parts that can also be combined:
 
 A third piece prototypes **combining the two**: re-ranking recommendations using price signals (discounts and spikes). That prototype runs on **simulated data only**. See [Data sources](#data-sources) for exactly what is real and what is simulated.
 
-> **Honesty note:** the methods are standard techniques (market-basket analysis, rolling statistics). The project is a learning and analysis exercise, not a production system, and the recommender has not been formally evaluated (see [Limitations](#limitations)).
+> **Honesty note:** the methods are standard techniques (market-basket analysis, rolling statistics). This is a learning and analysis project, not a production system, and the recommender has not been formally evaluated (see [Limitations](#limitations)).
 
 ---
 
@@ -18,8 +18,13 @@ A third piece prototypes **combining the two**: re-ranking recommendations using
 - [How to run](#how-to-run)
 - [How it works](#how-it-works)
 - [Results](#results)
+  - [Part 1: Real grocery orders (Instacart)](#part-1-real-grocery-orders-instacart)
+  - [Part 2: Real Government of India retail prices](#part-2-real-government-of-india-retail-prices)
+  - [Part 3: Simulated demo charts](#part-3-simulated-demo-charts-code-demonstration-only)
+  - [Part 4: Price-aware prototype](#part-4-price-aware-prototype-simulated-data)
 - [Limitations](#limitations)
 - [Future work](#future-work)
+- [Data credits](#data-credits)
 - [Author](#author)
 
 ---
@@ -29,9 +34,9 @@ A third piece prototypes **combining the two**: re-ranking recommendations using
 | Component | Data | Real or simulated |
 |---|---|---|
 | Recommender analysis on real orders | [Instacart Market Basket Analysis](https://www.kaggle.com/datasets/yasserh/instacart-online-grocery-basket-analysis-dataset) (Kaggle): anonymized US grocery orders, about 3 million. The code samples **100,000 orders** at random. | **Real** |
-| Price analysis on real prices | [Retail Prices Of Commodities In India](https://www.kaggle.com/) (Kaggle): weekly and monthly retail prices of food and non-food commodities in India, 2001 to 2021, sourced from the Government of India's Wholesale and Retail Price Information System. This project uses `Weekly_Food_Retail_Prices.csv`. | **Real** |
+| Price analysis on real prices | "Retail Prices Of Commodities In India" (Kaggle): weekly and monthly retail prices of food and non-food commodities in India, 2001 to 2021, sourced from the Government of India's price monitoring system. This project uses `Weekly_Food_Retail_Prices.csv`. | **Real** |
 | Recommender demo (`recommender.py`) | Fake baskets generated in code, with planted product bundles | Simulated |
-| Sample price analyzer (`price_analyzer.py` default run) | 180 days of generated prices with injected spikes | Simulated |
+| Sample price analyzer run (`price_analyzer.py` default) | 180 days of generated prices with injected spikes | Simulated |
 | Indian orders and Diwali bundles (`indian_data.py`) | Generated orders with Indian grocery bundles and an optional festival season | Simulated |
 | Price-aware assistant (`smart_assistant.py`, `integrated.py`) | Simulated Indian orders plus simulated prices | Simulated |
 
@@ -42,7 +47,7 @@ The real datasets are **not included in this repository** because of their size 
 ## Project structure
 
 ```
-grocery-analytics/
+Grocery-Analytics/
 ├── recommender.py            # Core recommender: co-purchase counts, confidence, lift
 ├── load_instacart.py         # Loads and samples the real Instacart orders
 ├── run_real.py               # Runs the recommender on real orders (+ time-of-day slices)
@@ -57,8 +62,12 @@ grocery-analytics/
 ├── smart_assistant.py        # Simulated demo: recommendations re-ranked by price signals
 ├── integrated.py             # Same idea, wired to price_analyzer.py and recommender.py
 │
-├── images/                   # Chart screenshots used in this README
+├── images/
+│   ├── charts_real_orders/          # Charts from the real Instacart analysis
+│   ├── charts_real_prices/          # Charts from the real Government of India price data
+│   └── charts_simulated_prices/     # Charts from the simulated price demo
 ├── requirements.txt
+├── .gitignore
 └── README.md
 ```
 
@@ -70,8 +79,8 @@ grocery-analytics/
 
 ```bash
 # 1. Clone the repository
-git clone https://github.com/bvbhavana1/grocery-analytics.git
-cd grocery-analytics
+git clone https://github.com/bvbhavana1/Grocery-Analytics.git
+cd Grocery-Analytics
 
 # 2. Install dependencies
 pip install -r requirements.txt
@@ -141,7 +150,7 @@ Recommendations are ranked by lift. A **minimum pair count** filter (for example
 
 ### 2. Real-data analysis (`load_instacart.py`, `run_real.py`, `make_plots.py`)
 
-Samples 100,000 real orders, builds one list of product names per order, and runs the recommender. The order hour is used to count orders per time slot and to chart demand by hour.
+Samples 100,000 real orders, builds one list of product names per order, and runs the recommender. The order hour is used to count orders per time slot (morning 05:00 to 11:59, afternoon 12:00 to 16:59, evening 17:00 to 21:59, night 22:00 to 04:59) and to chart demand by hour. The large file is read with memory-efficient integer types (`int32`, `int8`).
 
 ### 3. Price analyzer (`price_analyzer.py`)
 
@@ -151,6 +160,8 @@ Input is a CSV with columns `date, product, price`. For each product:
 - **Anomaly detection:** each price is compared with the mean and standard deviation of the **previous 14 observations** (shifted by one so a spike does not hide itself). The z-score is `(price - previous mean) / previous std`; values beyond ±3 are flagged.
 - **Trend:** the first-14 and last-14 observation averages give a percentage change, and a linear fit (`numpy.polyfit`) gives the slope per observation. Labels: rising (> +2%), falling (< -2%), stable.
 - **Charts:** price, moving average, and anomalies marked in red, one per product.
+
+> **Reading the chart labels:** the plotting code is shared between the simulated and real runs, so every chart's legend says "Daily price" and "7-day average". For the **simulated** charts that is correct. For the **real** price charts each point is a **weekly** national average and the moving average spans **7 weeks**.
 
 ### 4. Real price preparation (`prepare_real_prices.py`)
 
@@ -172,9 +183,11 @@ These thresholds and multipliers are **design choices, not tuned values**.
 
 ## Results
 
-### Real Instacart orders (100,000-order sample)
+### Part 1: Real grocery orders (Instacart)
 
-**Orders by time of day**
+All results in this part come from a random sample of **100,000 real orders**.
+
+**Orders by time slot**
 
 | Time slot | Orders |
 |---|---|
@@ -185,23 +198,55 @@ These thresholds and multipliers are **design choices, not tuned values**.
 
 About 76% of sampled orders were placed in the morning or afternoon.
 
-**Most-ordered products:** Banana (14,469 orders), Bag of Organic Bananas (12,050), Organic Strawberries (8,292), Organic Baby Spinach (7,455), Organic Hass Avocado (6,681). Fresh produce dominates.
+#### 1.1 When do customers order?
 
-**Example associations** (minimum pair count 50)
+<!-- IMAGE: images/real_orders/1_orders_by_hour.png  (from your charts_real folder) -->
+![Orders by hour of day](images/real_orders/1_orders_by_hour.png)
+
+Order volume is very low overnight (hours 0 to 5), climbs sharply from 7:00, and stays high between roughly 10:00 and 16:00 (about 7,800 to 8,400 orders per hour in the sample), then tapers through the evening.
+
+#### 1.2 Most-ordered products
+
+<!-- IMAGE: images/real_orders/2_top_products.png  (from your charts_real folder) -->
+![Top 15 most-ordered products](images/real_orders/2_top_products.png)
+
+Demand is concentrated in a few items. Banana appears in about 14,500 of the 100,000 orders and Bag of Organic Bananas in about 12,000. Fresh produce (bananas, strawberries, spinach, avocados) dominates the top 15, with Organic Whole Milk the only dairy item.
+
+#### 1.3 Product associations: "customers who buy X also buy..."
+
+Recommendations are ranked by **lift** with a minimum of 50 co-occurrences. The text on each bar shows how many orders contained both items, which indicates how much evidence is behind the bar.
+
+<!-- IMAGE: images/real_orders/3_recommendations_Organic_Whole_Milk.png  (from your charts_real folder) -->
+![Recommendations for Organic Whole Milk](images/real_orders/3_recommendations_Organic_Whole_Milk.png)
+
+For **Organic Whole Milk**, the strongest associations are yogurts (top lift about 6, from 120 orders containing both), followed by eggs, bread and cheese. Organic Whole String Cheese has the most co-occurrences (276 orders, lift about 3.6), so it is the best-supported suggestion even though its lift is lower than the yogurts'.
+
+<!-- IMAGE: images/real_orders/3_recommendations_Banana.png  (from your charts_real folder) -->
+![Recommendations for Banana](images/real_orders/3_recommendations_Banana.png)
+
+For **Banana**, the suggestions are other fruit (apples, pears, blueberries), plus yogurt, avocado and baby carrots, with lifts of roughly 2.7 to 3.2. Associations are weaker than for milk, because bananas are bought by many different kinds of customers.
 
 | If the cart has | Top suggestion | Bought together | Confidence | Lift |
 |---|---|---|---|---|
 | Organic Whole Milk | Whole Milk Plain Yogurt | 120 orders | 2.8% | 6.1 |
 | Banana | Golden Delicious Apple | 76 orders | 0.5% | 3.2 |
 
-The associations are sensible (milk with yogurt, banana with other fruit). Confidence is low even for the strongest pairs: real baskets are hard to predict, and most customers who buy milk do not buy any one specific yogurt.
+Confidence is low even for the strongest pairs: real baskets are hard to predict, and most customers who buy milk do not buy any one specific yogurt.
 
-![Orders by hour](images/1_orders_by_hour.png)
-![Recommendations for Organic Whole Milk](images/3_recommendations_Organic_Whole_Milk.png)
+#### 1.4 Does time of day change what people buy?
 
-### Real Government of India retail prices (weekly national averages, Jan 2015 to Mar 2021)
+<!-- IMAGE: images/real_orders/4_share_by_time_slot.png  (from your charts_real folder) -->
+![Share of orders containing top products by time slot](images/real_orders/4_share_by_time_slot.png)
 
-Change is the average of the first 14 weeks versus the last 14 weeks, in nominal prices (not adjusted for inflation).
+The share of orders containing each of the top five products is **broadly similar across the four time slots** (for example, Banana appears in roughly 14 to 15% of orders in every slot), so time of day has little visible effect on these staple items. Night shows somewhat higher shares for several products, but the night slot has only about 3,000 orders, so those differences are treated as noise. Recommendations built separately for each time slot were also too unstable to report as a finding.
+
+---
+
+### Part 2: Real Government of India retail prices
+
+Weekly **national average** retail prices for 10 staple commodities, January 2015 to March 2021, prepared from the Kaggle weekly file as described above. Each point on the charts below is one week; the orange line is a 7-week moving average; red dots are weeks where the price was more than 3 standard deviations from the previous 14 weeks.
+
+**Price change, first 14 weeks (early 2015) versus last 14 weeks (early 2021), nominal prices (not adjusted for inflation):**
 
 | Commodity | Early 2015 avg | Early 2021 avg | Change |
 |---|---|---|---|
@@ -216,17 +261,86 @@ Change is the average of the first 14 weeks versus the last 14 weeks, in nominal
 | Rice | 29.24 | 33.15 | +13.4% |
 | Tea | 108.36 | 108.22 | -0.1% |
 
-(Prices in rupees per unit, mostly per kg; milk is per litre.)
+(Rupees per unit, mostly per kg; milk is per litre.)
 
-**Observations**
+**Overall observations**
 - Onion and potato rose the most; rice, atta, gur and tea moved the least.
-- Vegetables were the most volatile, with repeated sharp surges (onion in 2015, 2019 and 2020; tomato in mid-2017 and mid-2020). Staples like rice and atta moved gradually.
-- Arhar spiked in late 2015, fell by 2018, then climbed again, so a simple "rising" label from start versus end hides its shape.
-- The detector flagged 161 anomalies, but most are runs of consecutive weeks from a single surge, and a few extreme single-week values (for example tea and potato) are probably reporting artifacts. The anomaly count should not be read as 161 separate events.
+- **Vegetables are the most volatile.** Onion and tomato show repeated sharp surges, while staples such as rice, atta, wheat and milk move gradually.
+- The detector flagged 161 anomalies, but most are **runs of consecutive weeks within a single surge**, and a few extreme single-week values (potato in 2017, tea in 2015) are probably reporting artifacts rather than real events. The anomaly count should not be read as 161 separate events.
 
-![Onion price chart](images/Onion.png)
+#### 2.1 Highly volatile: vegetables
 
-### Price-aware prototype (simulated data)
+<!-- IMAGE: images/real_prices/Onion.png  (from your charts_real_prices folder) -->
+![Onion price over time](images/real_prices/Onion.png)
+
+**Onion:** repeated sharp surges, with peaks in late 2015 (about 58), late 2017 (about 55), the end of 2019 (above 100) and late 2020 (about 67), each followed by a fall back toward 15 to 25. The red dots mostly sit on the rising edge of each surge.
+
+<!-- IMAGE: images/real_prices/Tomato.png  (from your charts_real_prices folder) -->
+![Tomato price over time](images/real_prices/Tomato.png)
+
+**Tomato:** a recurring seasonal pattern of surges and collapses every year, with the biggest peak in mid-2017 (about 72) and another large one in mid-2020 (about 56).
+
+<!-- IMAGE: images/real_prices/Potato.png  (from your charts_real_prices folder) -->
+![Potato price over time](images/real_prices/Potato.png)
+
+**Potato:** slower multi-month swings, a rise through 2020 to about 47 by December, then a sharp fall. The isolated one-week spike in 2017 reverts immediately and is likely a data or reporting artifact (not verified).
+
+#### 2.2 Steady upward trends: staples and dairy
+
+<!-- IMAGE: images/real_prices/Milk.png  (from your charts_real_prices folder) -->
+![Milk price over time](images/real_prices/Milk.png)
+
+**Milk:** a steady climb from about 41 to about 52 over six years, with very little volatility. The flagged points are small deviations along the trend.
+
+<!-- IMAGE: images/real_prices/Atta.png  (from your charts_real_prices folder) -->
+![Atta price over time](images/real_prices/Atta.png)
+
+**Atta:** a gradual rise from about 26 to about 32, with a plateau in 2017 to 2018 and a peak in 2020 before easing slightly.
+
+<!-- IMAGE: images/real_prices/Rice.png  (from your charts_real_prices folder) -->
+![Rice price over time](images/real_prices/Rice.png)
+
+**Rice:** one of the most stable commodities, drifting from about 29 to about 33.5, with noise early on and a faster rise in 2020.
+
+<!-- IMAGE: images/real_prices/Wheat.png  (from your charts_real_prices folder) -->
+![Wheat price over time](images/real_prices/Wheat.png)
+
+**Wheat:** a mostly steady rise from about 23 to about 30, with a flat period in 2018 and a quicker climb through 2019 and 2020. The 2015 spike is a single week.
+
+#### 2.3 Other patterns
+
+<!-- IMAGE: images/real_prices/Arhar.png  (from your charts_real_prices folder) -->
+![Arhar price over time](images/real_prices/Arhar.png)
+
+**Arhar (toor dal):** a boom and bust. Prices spiked to about 170 in late 2015, fell back to about 70 by 2018, then climbed again to about 105 to 110 by 2020 to 2021. A start-versus-end comparison (+24%) hides this shape.
+
+<!-- IMAGE: images/real_prices/Gur.png  (from your charts_real_prices folder) -->
+![Gur price over time](images/real_prices/Gur.png)
+
+**Gur (jaggery):** moderate swings around 45 to 55, with a pronounced spike to about 60 in mid-2016 and another rise in 2020.
+
+<!-- IMAGE: images/real_prices/Tea.png  (from your charts_real_prices folder) -->
+![Tea price over time](images/real_prices/Tea.png)
+
+**Tea:** noisy in 2015, then flat around 95 to 105 from 2017, rising again to about 110 by 2021. The 2015 spike to about 159 lasts only a couple of weeks and may be a reporting artifact. The series is for a single brand (Brooke Bond Red Label), so it reflects that brand's reported price.
+
+---
+
+### Part 3: Simulated demo charts (code demonstration only)
+
+These charts come from the default run of `price_analyzer.py`, which **generates 180 days of artificial prices** with random noise, a gentle trend and **spikes injected by the code itself**. They show that the anomaly detector works (the red dots land on the injected spikes), but they say nothing about real prices.
+
+<!-- IMAGES: images/simulated_prices/  (from your charts folder: Eggs_12, Milk, Onion, Rice_5kg, Tomato) -->
+
+| | |
+|---|---|
+| ![Eggs (simulated)](images/simulated_prices/Eggs_12.png) | ![Milk (simulated)](images/simulated_prices/Milk.png) |
+| ![Onion (simulated)](images/simulated_prices/Onion.png) | ![Rice 5kg (simulated)](images/simulated_prices/Rice_5kg.png) |
+| ![Tomato (simulated)](images/simulated_prices/Tomato.png) | |
+
+---
+
+### Part 4: Price-aware prototype (simulated data)
 
 Example output for a cart of Ghee and Atta in the simulated Diwali season:
 
@@ -246,8 +360,9 @@ Besan moves up because its simulated price dropped. This demonstrates the mechan
 - **Lift favours niche items.** The top suggestions can be rare products; the minimum pair count only partly offsets this.
 - **Simulated components** (demo orders, sample prices, Indian orders, Diwali bundles, price-aware assistant) show that the code works, not real-world behaviour. The price-aware re-ranking is untested for whether it improves anything.
 - **Real prices and real orders are not joined.** The Instacart data has no prices, and there is no real Indian order data, so the price-aware assistant cannot run on real data.
-- **Time-of-day recommendation differences were too noisy to report.** Slices (especially night, about 3,000 orders) are small.
-- **Price data caveats:** values are nominal; weekly figures are averages over whichever centres reported that week, so changes in reporting coverage can create artificial jumps; one variety per commodity is used (for example Tea is a single brand); the dataset ends around early 2021.
+- **Time-of-day differences were too small or noisy to report.** Slices (especially night, about 3,000 orders) are small.
+- **Price data caveats:** values are nominal; weekly figures are averages over whichever centres reported that week, so changes in reporting coverage can create artificial jumps; one variety per commodity is used (for example Tea is a single brand); the dataset ends around early 2021. Four cooking oils matched the keyword search but did not appear in the final file.
+- **Anomaly detection is simple.** A sustained climb keeps triggering flags, so flagged points should be read as episodes, not independent events.
 - **Instacart is US data** (product names such as "Bag of Organic Bananas"), so patterns may not transfer to Indian shoppers.
 
 ---
@@ -265,7 +380,7 @@ Besan moves up because its simulated price dropped. This demonstrates the mechan
 ## Data credits
 
 - Instacart Online Grocery Shopping Dataset, via Kaggle.
-- Retail Prices Of Commodities In India, via Kaggle; underlying source: Wholesale and Retail Price Information System, Directorate of Economics and Statistics, Government of India.
+- Retail Prices Of Commodities In India, via Kaggle; underlying source: the Government of India's retail price monitoring system.
 
 Please check each dataset's page for its license terms before reusing the data.
 
