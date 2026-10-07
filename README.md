@@ -201,14 +201,14 @@ About 76% of sampled orders were placed in the morning or afternoon.
 #### 1.1 When do customers order?
 
 <!-- IMAGE: images/real_orders/1_orders_by_hour.png  (from your charts_real folder) -->
-![Orders by hour of day](images/real_orders/1_orders_by_hour.png)
+![image alt]()(images/real_orders/1_orders_by_hour.png)
 
 Order volume is very low overnight (hours 0 to 5), climbs sharply from 7:00, and stays high between roughly 10:00 and 16:00 (about 7,800 to 8,400 orders per hour in the sample), then tapers through the evening.
 
 #### 1.2 Most-ordered products
 
 <!-- IMAGE: images/real_orders/2_top_products.png  (from your charts_real folder) -->
-![Top 15 most-ordered products](images/real_orders/2_top_products.png)
+![image alt]()![Top 15 most-ordered products](images/real_orders/2_top_products.png)
 
 Demand is concentrated in a few items. Banana appears in about 14,500 of the 100,000 orders and Bag of Organic Bananas in about 12,000. Fresh produce (bananas, strawberries, spinach, avocados) dominates the top 15, with Organic Whole Milk the only dairy item.
 
@@ -217,11 +217,13 @@ Demand is concentrated in a few items. Banana appears in about 14,500 of the 100
 Recommendations are ranked by **lift** with a minimum of 50 co-occurrences. The text on each bar shows how many orders contained both items, which indicates how much evidence is behind the bar.
 
 <!-- IMAGE: images/real_orders/3_recommendations_Organic_Whole_Milk.png  (from your charts_real folder) -->
+![image alt]()
 ![Recommendations for Organic Whole Milk](images/real_orders/3_recommendations_Organic_Whole_Milk.png)
 
 For **Organic Whole Milk**, the strongest associations are yogurts (top lift about 6, from 120 orders containing both), followed by eggs, bread and cheese. Organic Whole String Cheese has the most co-occurrences (276 orders, lift about 3.6), so it is the best-supported suggestion even though its lift is lower than the yogurts'.
 
 <!-- IMAGE: images/real_orders/3_recommendations_Banana.png  (from your charts_real folder) -->
+![image alt]()
 ![Recommendations for Banana](images/real_orders/3_recommendations_Banana.png)
 
 For **Banana**, the suggestions are other fruit (apples, pears, blueberries), plus yogurt, avocado and baby carrots, with lifts of roughly 2.7 to 3.2. Associations are weaker than for milk, because bananas are bought by many different kinds of customers.
@@ -236,6 +238,7 @@ Confidence is low even for the strongest pairs: real baskets are hard to predict
 #### 1.4 Does time of day change what people buy?
 
 <!-- IMAGE: images/real_orders/4_share_by_time_slot.png  (from your charts_real folder) -->
+![image alt]()
 ![Share of orders containing top products by time slot](images/real_orders/4_share_by_time_slot.png)
 
 The share of orders containing each of the top five products is **broadly similar across the four time slots** (for example, Banana appears in roughly 14 to 15% of orders in every slot), so time of day has little visible effect on these staple items. Night shows somewhat higher shares for several products, but the night slot has only about 3,000 orders, so those differences are treated as noise. Recommendations built separately for each time slot were also too unstable to report as a finding.
@@ -271,16 +274,19 @@ Weekly **national average** retail prices for 10 staple commodities, January 201
 #### 2.1 Highly volatile: vegetables
 
 <!-- IMAGE: images/real_prices/Onion.png  (from your charts_real_prices folder) -->
+![image alt]()
 ![Onion price over time](images/real_prices/Onion.png)
 
 **Onion:** repeated sharp surges, with peaks in late 2015 (about 58), late 2017 (about 55), the end of 2019 (above 100) and late 2020 (about 67), each followed by a fall back toward 15 to 25. The red dots mostly sit on the rising edge of each surge.
 
 <!-- IMAGE: images/real_prices/Tomato.png  (from your charts_real_prices folder) -->
+![image alt]()
 ![Tomato price over time](images/real_prices/Tomato.png)
 
 **Tomato:** a recurring seasonal pattern of surges and collapses every year, with the biggest peak in mid-2017 (about 72) and another large one in mid-2020 (about 56).
 
 <!-- IMAGE: images/real_prices/Potato.png  (from your charts_real_prices folder) -->
+![image alt]()
 ![Potato price over time](images/real_prices/Potato.png)
 
 **Potato:** slower multi-month swings, a rise through 2020 to about 47 by December, then a sharp fall. The isolated one-week spike in 2017 reverts immediately and is likely a data or reporting artifact (not verified).
@@ -288,21 +294,25 @@ Weekly **national average** retail prices for 10 staple commodities, January 201
 #### 2.2 Steady upward trends: staples and dairy
 
 <!-- IMAGE: images/real_prices/Milk.png  (from your charts_real_prices folder) -->
+![image alt]()
 ![Milk price over time](images/real_prices/Milk.png)
 
 **Milk:** a steady climb from about 41 to about 52 over six years, with very little volatility. The flagged points are small deviations along the trend.
 
 <!-- IMAGE: images/real_prices/Atta.png  (from your charts_real_prices folder) -->
+![image alt]()
 ![Atta price over time](images/real_prices/Atta.png)
 
 **Atta:** a gradual rise from about 26 to about 32, with a plateau in 2017 to 2018 and a peak in 2020 before easing slightly.
 
 <!-- IMAGE: images/real_prices/Rice.png  (from your charts_real_prices folder) -->
+![image alt]()
 ![Rice price over time](images/real_prices/Rice.png)
 
 **Rice:** one of the most stable commodities, drifting from about 29 to about 33.5, with noise early on and a faster rise in 2020.
 
 <!-- IMAGE: images/real_prices/Wheat.png  (from your charts_real_prices folder) -->
+![image alt]()
 ![Wheat price over time](images/real_prices/Wheat.png)
 
 **Wheat:** a mostly steady rise from about 23 to about 30, with a flat period in 2018 and a quicker climb through 2019 and 2020. The 2015 spike is a single week.
@@ -310,16 +320,19 @@ Weekly **national average** retail prices for 10 staple commodities, January 201
 #### 2.3 Other patterns
 
 <!-- IMAGE: images/real_prices/Arhar.png  (from your charts_real_prices folder) -->
+![image alt]()
 ![Arhar price over time](images/real_prices/Arhar.png)
 
 **Arhar (toor dal):** a boom and bust. Prices spiked to about 170 in late 2015, fell back to about 70 by 2018, then climbed again to about 105 to 110 by 2020 to 2021. A start-versus-end comparison (+24%) hides this shape.
 
 <!-- IMAGE: images/real_prices/Gur.png  (from your charts_real_prices folder) -->
+![image alt]()
 ![Gur price over time](images/real_prices/Gur.png)
 
 **Gur (jaggery):** moderate swings around 45 to 55, with a pronounced spike to about 60 in mid-2016 and another rise in 2020.
 
 <!-- IMAGE: images/real_prices/Tea.png  (from your charts_real_prices folder) -->
+![image alt]()
 ![Tea price over time](images/real_prices/Tea.png)
 
 **Tea:** noisy in 2015, then flat around 95 to 105 from 2017, rising again to about 110 by 2021. The 2015 spike to about 159 lasts only a couple of weeks and may be a reporting artifact. The series is for a single brand (Brooke Bond Red Label), so it reflects that brand's reported price.
@@ -334,9 +347,9 @@ These charts come from the default run of `price_analyzer.py`, which **generates
 
 | | |
 |---|---|
-| ![Eggs (simulated)](images/simulated_prices/Eggs_12.png) | ![Milk (simulated)](images/simulated_prices/Milk.png) |
-| ![Onion (simulated)](images/simulated_prices/Onion.png) | ![Rice 5kg (simulated)](images/simulated_prices/Rice_5kg.png) |
-| ![Tomato (simulated)](images/simulated_prices/Tomato.png) | |
+![image alt]()| ![Eggs (simulated)](images/simulated_prices/Eggs_12.png) | ![Milk (simulated)](images/simulated_prices/Milk.png) |
+![image alt]()| ![Onion (simulated)](images/simulated_prices/Onion.png) | ![Rice 5kg (simulated)](images/simulated_prices/Rice_5kg.png) |
+![image alt]()| ![Tomato (simulated)](images/simulated_prices/Tomato.png) | |
 
 ---
 
