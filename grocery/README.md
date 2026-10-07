@@ -201,7 +201,7 @@ About 76% of sampled orders were placed in the morning or afternoon.
 #### 1.1 When do customers order?
 
 <!-- IMAGE: images/real_orders/1_orders_by_hour.png  (from your charts_real folder) -->
-![Orders by hour of day](images/real_orders/1_orders_by_hour.png)
+![Orders by hour of day]([images/real_orders/1_orders_by_hour.png](https://github.com/bvbhavana1/Grocery-Analytics/blob/edd3e1ffeacfd22ad9a7ea72e9986d5285b0016d/grocery/image/charts_real/1_orders_by_hour.png)
 
 Order volume is very low overnight (hours 0 to 5), climbs sharply from 7:00, and stays high between roughly 10:00 and 16:00 (about 7,800 to 8,400 orders per hour in the sample), then tapers through the evening.
 
